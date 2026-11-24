@@ -1,0 +1,51 @@
+{
+  "name": "dsh-ascii-wallpapers",
+  "version": "1.0.0",
+  "description": "50 live, animated ASCII character wallpapers with whole-app theming and agent reactivity for DeepSeek Harness",
+  "author": "Davidzinco (ported from Mix4o445/antigravity-ascii-wallpapers)",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "cordis",
+    "ascii",
+    "wallpapers",
+    "themes",
+    "plugin"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Davidzinco/deepseek-harness-ascii-wallpapers.git"
+  },
+  "homepage": "https://github.com/Davidzinco/deepseek-harness-ascii-wallpapers#readme",
+  "bugs": {
+    "url": "https://github.com/Davidzinco/deepseek-harness-ascii-wallpapers/issues"
+  },
+  "type": "module",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-theme",
+        "@deepseek-ai/dsh-client-ui-layout"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build-client.cjs",
+    "test": "node tests/plugin.test.cjs",
+    "install-plugin": "node manage-wallpapers.cjs install",
+    "uninstall-plugin": "node manage-wallpapers.cjs uninstall",
+    "status": "node manage-wallpapers.cjs status",
+    "verify": "node manage-wallpapers.cjs verify"
+  },
+  "license": "MIT"
+}

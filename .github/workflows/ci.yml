@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node-version: 20
+          - os: ubuntu-latest
+            node-version: 22
+          - os: windows-latest
+            node-version: 22
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build client bundle
+        run: node scripts/build-client.cjs
+
+      - name: Check built bundle is in sync
+        run: git diff --exit-code lib/client.js
+
+      - name: Run plugin tests
+        run: node tests/plugin.test.cjs
+
+      - name: Verify DeepSeek Harness contract
+        run: node manage-wallpapers.cjs verify
