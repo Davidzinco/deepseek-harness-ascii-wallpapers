@@ -20,6 +20,9 @@ Unlike an `app.asar` patcher, this plugin registers cleanly in your DeepSeek Har
 
 *22 light and 28 dark procedural Canvas 2D scenes — try all 50 interactively in the **[Live Demo](https://davidzinco.github.io/deepseek-harness-ascii-wallpapers/)**.*
 
+> [!NOTE]
+> The browser Live Demo runs the real ASCII wallpaper renderer and theme picker inside a simplified web mockup of DeepSeek Harness — the app shell, layout, and simulated agent controls are for preview purposes and are not 100% identical to the actual DeepSeek Harness desktop app.
+
 ## Features
 
 - **50 live themes** (22 light and 28 dark): Cloud Drift, Aurora, Honu Lagoon, Koi Pond, Jellyfish, Paper Boats, Sakura, Fireflies, Moonlit, Ember Dunes, Night Rain, Snowfall, Sky Lanterns, Windy Meadow, Spiral Galaxy, Bamboo Grove, Digital Rain, Morning Tide, Autumn Leaves, Alpine Dawn, Retro Sunset, Lava Lamp, Starry Catnap, Supercell, Black Smokers, Candlelight, Neon Alley, Black Hole, Volcano, Swirling Night, Radar Scope, Ice Giant, Kelp Forest, Signal Glitch, Peacock Feathers, Blueprint, Stained Glass, Ink Wash, Ice Cave, Hot Air Balloons, Coral Reef, Pop Art, Paper Cranes, Matcha, Desert Oasis, Lavender Fields, Windmills, Island Palms, Moire, and Zen Garden.
