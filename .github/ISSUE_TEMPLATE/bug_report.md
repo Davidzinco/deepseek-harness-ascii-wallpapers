@@ -1,15 +1,15 @@
 ---
 name: Bug Report
-about: Laporkan bug yang ditemukan
+about: Report a bug you encountered
 labels: bug
 ---
 
-## Deskripsi Bug
-Jelaskan bug yang terjadi.
+## Bug Description
+Describe the bug clearly.
 
-## Langkah Reproduksi
+## Steps to Reproduce
 1. ...
 2. ...
 
-## Perilaku yang Diharapkan
+## Expected Behavior
 ...
