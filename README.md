@@ -6,6 +6,18 @@
 
 Unlike an `app.asar` patcher, this plugin registers cleanly in your DeepSeek Harness user patch file (`cordis.patch.yml`), **does not modify `app.asar`**, and survives app updates.
 
+## Preview
+
+![DeepSeek Harness ASCII Wallpapers Preview](assets/preview.gif)
+
+*Live animated ASCII wallpapers (`Aurora`, `Sakura`, `Starry Catnap`) with automatic frosted-glass `--dsw-*` UI theming and the built-in Shadow DOM theme picker.*
+
+### Theme Showcase (12 of 50)
+
+![50 Live Procedural ASCII Themes Showcase](assets/themes-showcase.png)
+
+*22 light and 28 dark procedural Canvas 2D scenes — try all 50 interactively in the [Live Demo & Theme Showcase](https://mix4o445.github.io/antigravity-ascii-wallpapers/).*
+
 ## Features
 
 - **50 live themes** (22 light and 28 dark): Cloud Drift, Aurora, Honu Lagoon, Koi Pond, Jellyfish, Paper Boats, Sakura, Fireflies, Moonlit, Ember Dunes, Night Rain, Snowfall, Sky Lanterns, Windy Meadow, Spiral Galaxy, Bamboo Grove, Digital Rain, Morning Tide, Autumn Leaves, Alpine Dawn, Retro Sunset, Lava Lamp, Starry Catnap, Supercell, Black Smokers, Candlelight, Neon Alley, Black Hole, Volcano, Swirling Night, Radar Scope, Ice Giant, Kelp Forest, Signal Glitch, Peacock Feathers, Blueprint, Stained Glass, Ink Wash, Ice Cave, Hot Air Balloons, Coral Reef, Pop Art, Paper Cranes, Matcha, Desert Oasis, Lavender Fields, Windmills, Island Palms, Moire, and Zen Garden.
