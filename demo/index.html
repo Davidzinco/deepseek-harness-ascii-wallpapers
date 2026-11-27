@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ASCII Wallpapers for DeepSeek Harness — Live Demo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b1826'/><text x='16' y='22' text-anchor='middle' font-family='monospace' font-size='18' fill='%237cf2b4'>%23</text></svg>">
+  <meta name="description" content="Interactive live demo of 50 procedural Canvas 2D ASCII wallpapers with frosted-glass --dsw-* theming and native agent reactivity for DeepSeek Harness.">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%; overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: #0d1117;
+      color: var(--dsw-alias-label-primary, #e6edf3);
+    }
+    #root { width: 100vw; height: 100vh; }
+    .app-shell {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      position: relative;
+    }
+    .titlebar {
+      height: 38px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,0.08));
+      font-size: 12px;
+      color: var(--dsw-alias-label-secondary, #9aa6b2);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    .titlebar-left {
+      display: flex; align-items: center; gap: 10px;
+      min-width: 0;
+    }
+    .traffic { display: flex; gap: 7px; align-items: center; flex-shrink: 0; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .dot.r { background: #ff5f56; }
+    .dot.y { background: #ffbd2e; }
+    .dot.g { background: #27c93f; }
+    .title-text {
+      font-weight: 600;
+      color: var(--dsw-alias-label-primary, #e6edf3);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .demo-badge {
+      font-size: 10px; font-weight: 600;
+      padding: 2px 7px; border-radius: 999px;
+      background: color-mix(in srgb, var(--dsw-alias-brand-primary, #7cf2b4) 18%, transparent);
+      color: var(--dsw-alias-brand-primary, #7cf2b4);
+      border: 1px solid color-mix(in srgb, var(--dsw-alias-brand-primary, #7cf2b4) 35%, transparent);
+      white-space: nowrap;
+    }
+    .titlebar-actions {
+      display: flex; align-items: center; gap: 8px;
+      margin-right: 110px; /* leave room for the plugin's native Themes trigger button */
+    }
+    .tb-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 24px; padding: 0 9px; border-radius: 6px;
+      border: 1px solid var(--dsw-alias-border-l2, rgba(255,255,255,0.16));
+      background: var(--dsw-alias-card-fill, rgba(255,255,255,0.08));
+      color: var(--dsw-alias-label-primary, #e6edf3);
+      font-size: 11px; font-weight: 500;
+      cursor: pointer; text-decoration: none;
+      transition: border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+    }
+    .tb-btn:hover {
+      border-color: var(--dsw-alias-brand-primary, #7cf2b4);
+    }
+    .tb-btn.running {
+      border-color: var(--dsw-alias-brand-primary, #7cf2b4);
+      background: color-mix(in srgb, var(--dsw-alias-brand-primary, #7cf2b4) 22%, transparent);
+    }
+    .pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--dsw-alias-brand-primary, #7cf2b4);
+      opacity: 0.45;
+    }
+    .tb-btn.running .pulse-dot {
+      opacity: 1;
+      animation: pulse 0.9s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.45); opacity: 0.55; }
+    }
+    .win-controls {
+      display: flex; gap: 14px; opacity: 0.6; font-size: 12px;
+      user-select: none;
+    }
+    .body-row {
+      flex: 1; display: flex; min-height: 0; position: relative;
+    }
+    aside {
+      width: 230px;
+      padding: 14px 10px;
+      border-right: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,0.08));
+      display: flex; flex-direction: column; gap: 6px;
+      z-index: 2;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .new-chat {
+      padding: 8px 10px; border-radius: 8px;
+      background: var(--dsw-alias-card-fill, rgba(255,255,255,0.08));
+      border: 1px solid var(--dsw-alias-border-l2, rgba(255,255,255,0.12));
+      color: var(--dsw-alias-label-primary);
+      font-size: 12px; font-weight: 500;
+      margin-bottom: 6px;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer;
+    }
+    .new-chat:hover { border-color: var(--dsw-alias-brand-primary); }
+    .nav-label {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--dsw-alias-label-secondary);
+      padding: 6px 8px 2px;
+    }
+    .nav-item {
+      padding: 7px 10px; border-radius: 7px; font-size: 12px;
+      color: var(--dsw-alias-label-secondary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      cursor: pointer; border: 0; background: transparent; text-align: left;
+      width: 100%;
+    }
+    .nav-item:hover {
+      background: var(--dsw-alias-interactive-bg-hover, rgba(255,255,255,0.06));
+      color: var(--dsw-alias-label-primary);
+    }
+    .nav-item.active {
+      background: var(--dsw-specific-sidebar-nav-item-active, rgba(124,242,180,0.16));
+      color: var(--dsw-alias-label-primary);
+      font-weight: 500;
+    }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 10px 8px 4px;
+      font-size: 11px; line-height: 1.5;
+      color: var(--dsw-alias-label-secondary);
+      border-top: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,0.08));
+    }
+    .sidebar-footer kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10.5px;
+      padding: 1px 5px; border-radius: 4px;
+      border: 1px solid var(--dsw-alias-border-l2);
+      background: var(--dsw-alias-card-fill);
+      color: var(--dsw-alias-label-primary);
+    }
+    .main-pane {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between;
+      padding: 24px 24px 22px;
+      position: relative; z-index: 2;
+      min-width: 0;
+      transition: padding-right 0.18s ease-out;
+    }
+    @media (min-width: 1024px) {
+      .main-pane.panel-open {
+        padding-right: 368px;
+      }
+    }
+    .convo {
+      width: 100%; max-width: 560px;
+      flex: 1; overflow-y: auto;
+      display: flex; flex-direction: column; gap: 12px;
+      padding: 4px 2px 16px;
+    }
+    .msg {
+      padding: 12px 15px; border-radius: 12px;
+      font-size: 13px; line-height: 1.55;
+      border: 1px solid var(--dsw-alias-border-l1, rgba(255,255,255,0.1));
+      background: var(--dsw-specific-bubble, rgba(20,30,45,0.75));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .msg.user {
+      align-self: flex-end; max-width: 85%;
+      background: var(--dsw-specific-bubble-highlight, rgba(124,242,180,0.18));
+      border-color: var(--dsw-alias-border-l2);
+    }
+    .msg .role {
+      font-size: 11px; font-weight: 600;
+      color: var(--dsw-alias-brand-primary);
+      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .msg code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.5px;
+      padding: 1px 5px; border-radius: 4px;
+      background: color-mix(in srgb, var(--dsw-alias-brand-primary) 16%, transparent);
+      color: var(--dsw-alias-brand-primary);
+    }
+    .composer {
+      width: 100%; max-width: 560px;
+      border-radius: 14px;
+      border: 1px solid var(--dsw-alias-border-l2, rgba(255,255,255,0.16));
+      padding: 12px 14px;
+      display: flex; flex-direction: column; gap: 10px;
+      flex-shrink: 0;
+    }
+    .composer textarea {
+      width: 100%; resize: none; border: 0; outline: none;
+      background: transparent;
+      color: var(--dsw-alias-label-primary);
+      font: inherit; font-size: 13px; line-height: 1.45;
+      min-height: 22px; max-height: 88px;
+    }
+    .composer textarea::placeholder {
+      color: var(--dsw-alias-label-secondary);
+    }
+    .composer-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+      font-size: 11px; color: var(--dsw-alias-label-secondary);
+    }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chip {
+      padding: 3px 8px; border-radius: 999px;
+      border: 1px solid var(--dsw-alias-border-l2);
+      background: transparent;
+      color: var(--dsw-alias-label-secondary);
+      font-size: 10.5px; cursor: pointer;
+    }
+    .chip:hover {
+      border-color: var(--dsw-alias-brand-primary);
+      color: var(--dsw-alias-label-primary);
+    }
+    .send-btn {
+      padding: 5px 13px; border-radius: 7px; border: 0;
+      background: var(--dsw-alias-button-primary-fill, #7cf2b4);
+      color: #0b141c; font-weight: 600; font-size: 11.5px;
+      cursor: pointer; flex-shrink: 0;
+    }
+    .send-btn:hover { filter: brightness(1.06); }
+    @media (max-width: 840px) {
+      aside { display: none; }
+      .win-controls { display: none; }
+      .demo-badge { display: none; }
+      .titlebar-actions { margin-right: 92px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <div class="app-shell">
+      <div data-shell-overlay style="display:none"></div>
+      <div class="titlebar">
+        <div class="titlebar-left">
+          <div class="traffic">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          </div>
+          <span class="title-text">DeepSeek Harness</span>
+          <span class="demo-badge">Interactive Demo</span>
+        </div>
+        <div class="titlebar-actions">
+          <button id="agent-sim-btn" class="tb-btn" type="button" title="Simulate an active DeepSeek agent session to test ctx.uiSession reactivity and completion ripple">
+            <span class="pulse-dot"></span>
+            <span id="agent-sim-label">Simulate Agent</span>
+          </button>
+          <a class="tb-btn" href="https://github.com/Davidzinco/deepseek-harness-ascii-wallpapers" target="_blank" rel="noopener">
+            GitHub ↗
+          </a>
+        </div>
+        <div class="win-controls" aria-hidden="true"><span>—</span><span>□</span><span>×</span></div>
+      </div>
+
+      <div class="body-row">
+        <aside>
+          <button id="shuffle-btn" class="new-chat" type="button">
+            <span>✦ Shuffle Theme</span><span style="opacity:.6">50</span>
+          </button>
+          <div class="nav-label">Featured Themes</div>
+          <button class="nav-item active" data-quick="aurora">Aurora (Dark)</button>
+          <button class="nav-item" data-quick="sakura">Sakura (Light)</button>
+          <button class="nav-item" data-quick="catnap">Starry Catnap (Dark)</button>
+          <button class="nav-item" data-quick="clouds">Cloud Drift (Light)</button>
+          <button class="nav-item" data-quick="retro">Retro Sunset (Dark)</button>
+          <button class="nav-item" data-quick="code">Digital Rain (Dark)</button>
+          <button class="nav-item" data-quick="blackhole">Black Hole (Dark)</button>
+          <button class="nav-item" data-quick="balloons">Hot Air Balloons (Light)</button>
+          <button class="nav-item" data-quick="koi">Koi Pond (Dark)</button>
+          <button class="nav-item" data-quick="lagoon">Honu Lagoon (Dark)</button>
+          <div class="sidebar-footer">
+            Press <kbd>Ctrl+Alt+W</kbd> (or <kbd>⌥⌘W</kbd>) to toggle the <strong>Themes</strong> picker, or type <code>/theme</code> below.
+          </div>
+        </aside>
+
+        <div class="main-pane">
+          <div class="convo" id="convo" data-conversation-scroll>
+            <div class="msg user">
+              Show me how <code>dsh-ascii-wallpapers</code> looks inside DeepSeek Harness!
+            </div>
+            <div class="msg">
+              <div class="role"><span>●</span> DeepSeek Harness</div>
+              Welcome to the live demo! Click <strong>Themes</strong> in the top-right to browse all <strong>50 procedural ASCII themes</strong>, switch Glyph styles (<code>ASCII</code>, <code>Braille</code>, <code>Blocks</code>, <code>Katakana</code>), or click <strong>Simulate Agent</strong> to watch the scene speed up and trigger a completion ripple.
+            </div>
+          </div>
+
+          <div class="composer" data-composer-card>
+            <textarea id="composer-input" rows="1" placeholder="Type /theme sakura, /theme random, /theme off, or send a message..."></textarea>
+            <div class="composer-bar">
+              <div class="chips">
+                <button class="chip" type="button" data-cmd="/theme random">/theme random</button>
+                <button class="chip" type="button" data-cmd="/theme catnap">/theme catnap</button>
+                <button class="chip" type="button" data-cmd="/theme sakura">/theme sakura</button>
+              </div>
+              <button id="send-btn" class="send-btn" type="button">Send ↵</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./src/wallpaper-scenes.js"></script>
+  <script src="./src/dsh-ascii-wallpapers.js"></script>
+  <script>
+    (() => {
+      // Minimal reactive mock of Cordis ctx.theme & ctx.uiSession for the browser demo
+      const sessionMap = new Map();
+      const listeners = new Set();
+      const notifySessions = () => listeners.forEach((fn) => { try { fn(); } catch {} });
+
+      const demoCtx = {
+        theme: {
+          getTheme: () => ({ preference: 'dark', resolved: 'dark' }),
+          setTheme: () => {},
+          registerTheme: () => () => {}
+        },
+        uiSession: {
+          sessionStatus: {
+            getSnapshot: () => sessionMap,
+            subscribe: (fn) => {
+              listeners.add(fn);
+              return () => listeners.delete(fn);
+            }
+          }
+        }
+      };
+
+      // Support ?theme=<id> deep links (default to aurora for a striking first impression)
+      const params = new URLSearchParams(location.search);
+      const requested = params.get('theme');
+      const KEY = 'dshAsciiWallpaperPreferences.v1';
+      try {
+        const existing = localStorage.getItem(KEY);
+        if (requested) {
+          const parsed = existing ? JSON.parse(existing) : {};
+          localStorage.setItem(KEY, JSON.stringify({ ...parsed, theme: requested }));
+        } else if (!existing) {
+          localStorage.setItem(KEY, JSON.stringify({ theme: 'aurora', intensity: 100, paused: false, reactive: true, recolor: true, glyphs: 'ascii', scale: 'normal' }));
+        }
+      } catch {}
+
+      mountDshAsciiWallpapers(demoCtx, drawAsciiScene);
+
+      const getShadow = () => document.getElementById('dsh-ascii-controls')?.shadowRoot;
+      const selectTheme = (id) => {
+        const sr = getShadow();
+        const btn = sr?.querySelector(`[data-theme="${id}"]`);
+        if (btn) {
+          btn.click();
+          btn.blur();
+        }
+        document.querySelectorAll('[data-quick]').forEach((el) => {
+          el.classList.toggle('active', el.dataset.quick === id);
+        });
+      };
+
+      // Sync .main-pane right padding with Themes panel open/close state
+      const mainPane = document.querySelector('.main-pane');
+      const syncPanelPadding = () => {
+        const trigger = getShadow()?.querySelector('.trigger');
+        if (trigger && mainPane) {
+          mainPane.classList.toggle('panel-open', trigger.getAttribute('aria-expanded') === 'true');
+        }
+      };
+      const triggerEl = getShadow()?.querySelector('.trigger');
+      if (triggerEl) {
+        new MutationObserver(syncPanelPadding).observe(triggerEl, { attributes: true, attributeFilter: ['aria-expanded'] });
+      }
+
+      // Open the Themes panel by default on wider desktop viewports
+      if (window.innerWidth >= 1024) {
+        setTimeout(() => {
+          const trigger = getShadow()?.querySelector('.trigger');
+          if (trigger && trigger.getAttribute('aria-expanded') !== 'true') trigger.click();
+          syncPanelPadding();
+        }, 120);
+      }
+
+      // Sidebar quick theme buttons
+      document.querySelectorAll('[data-quick]').forEach((btn) => {
+        btn.addEventListener('click', () => selectTheme(btn.dataset.quick));
+      });
+      document.getElementById('shuffle-btn').addEventListener('click', () => {
+        getShadow()?.querySelector('.shuffle')?.click();
+      });
+
+      // Simulated agent run for testing ctx.uiSession reactivity + completion ripple
+      const agentBtn = document.getElementById('agent-sim-btn');
+      const agentLabel = document.getElementById('agent-sim-label');
+      let simTimer = 0;
+
+      function startAgentRun(durationMs = 2600) {
+        if (simTimer) clearTimeout(simTimer);
+        sessionMap.set('demo-session', { running: true });
+        notifySessions();
+        agentBtn.classList.add('running');
+        agentLabel.textContent = 'Agent Running…';
+        simTimer = setTimeout(() => {
+          simTimer = 0;
+          sessionMap.set('demo-session', { running: false });
+          notifySessions();
+          agentBtn.classList.remove('running');
+          agentLabel.textContent = 'Simulate Agent';
+        }, durationMs);
+      }
+
+      agentBtn.addEventListener('click', () => {
+        if (simTimer) {
+          clearTimeout(simTimer);
+          simTimer = 0;
+          sessionMap.set('demo-session', { running: false });
+          notifySessions();
+          agentBtn.classList.remove('running');
+          agentLabel.textContent = 'Simulate Agent';
+        } else {
+          startAgentRun(3000);
+        }
+      });
+
+      // Interactive composer (supports both /theme commands handled by the plugin and demo messages)
+      const input = document.getElementById('composer-input');
+      const convo = document.getElementById('convo');
+      const sendBtn = document.getElementById('send-btn');
+
+      function appendMessage(text, isUser) {
+        const div = document.createElement('div');
+        div.className = isUser ? 'msg user' : 'msg';
+        if (!isUser) {
+          const role = document.createElement('div');
+          role.className = 'role';
+          role.innerHTML = '<span>●</span> DeepSeek Harness';
+          div.appendChild(role);
+        }
+        const span = document.createElement('span');
+        span.textContent = text;
+        div.appendChild(span);
+        convo.appendChild(div);
+        convo.scrollTop = convo.scrollHeight;
+      }
+
+      function submitComposer() {
+        const text = input.value.trim();
+        if (!text) return;
+        if (/^\/themes?(?:\s+(.+))?$/i.test(text)) {
+          // Let the plugin's native keydown handler process /theme commands
+          input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+          return;
+        }
+        appendMessage(text, true);
+        input.value = '';
+        startAgentRun(2000);
+        setTimeout(() => {
+          appendMessage('Simulated run complete — notice the wallpaper speed boost while running and the completion ripple when finished!', false);
+        }, 2050);
+      }
+
+      sendBtn.addEventListener('click', submitComposer);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !/^\/themes?(?:\s+(.+))?$/i.test(input.value.trim())) {
+          e.preventDefault();
+          submitComposer();
+        }
+      });
+
+      document.querySelectorAll('[data-cmd]').forEach((chip) => {
+        chip.addEventListener('click', () => {
+          input.value = chip.dataset.cmd;
+          input.focus();
+          submitComposer();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

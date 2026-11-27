@@ -1,6 +1,8 @@
 # ASCII Wallpapers for DeepSeek Harness
 
-> Ported from **[Mix4o445/antigravity-ascii-wallpapers](https://github.com/Mix4o445/antigravity-ascii-wallpapers)** ([Live Demo & Theme Showcase](https://mix4o445.github.io/antigravity-ascii-wallpapers/)) and adapted as a **native Cordis client/host plugin** (`dsh-ascii-wallpapers`) for the **DeepSeek Harness** desktop app.
+> Ported from **[Mix4o445/antigravity-ascii-wallpapers](https://github.com/Mix4o445/antigravity-ascii-wallpapers)** and adapted as a **native Cordis client/host plugin** (`dsh-ascii-wallpapers`) for the **DeepSeek Harness** desktop app.
+>
+> **[Try the Interactive Live Demo →](https://davidzinco.github.io/deepseek-harness-ascii-wallpapers/)**
 
 > Unofficial community plugin. Not affiliated with or endorsed by DeepSeek AI or Google. Nothing leaves your machine.
 
@@ -16,7 +18,7 @@ Unlike an `app.asar` patcher, this plugin registers cleanly in your DeepSeek Har
 
 ![50 Live Procedural ASCII Themes Showcase](assets/themes-showcase.png)
 
-*22 light and 28 dark procedural Canvas 2D scenes — try all 50 interactively in the [Live Demo & Theme Showcase](https://mix4o445.github.io/antigravity-ascii-wallpapers/).*
+*22 light and 28 dark procedural Canvas 2D scenes — try all 50 interactively in the **[Live Demo](https://davidzinco.github.io/deepseek-harness-ascii-wallpapers/)**.*
 
 ## Features
 
@@ -85,7 +87,7 @@ DeepSeek Harness's `@deepseek-ai/dsh-client-modules` discovers host plugins load
 
 ## Credits / Original Source
 
-- **Original project**: [antigravity-ascii-wallpapers](https://github.com/Mix4o445/antigravity-ascii-wallpapers) by **[Mix4o445](https://github.com/Mix4o445)** ([Demo & Themes](https://mix4o445.github.io/antigravity-ascii-wallpapers/)).
+- **Original project**: [antigravity-ascii-wallpapers](https://github.com/Mix4o445/antigravity-ascii-wallpapers) by **[Mix4o445](https://github.com/Mix4o445)** (MIT License).
 - The 50 procedural ASCII scene renderers (`src/wallpaper-scenes.js`), theme palettes, and picker UI design originate from `Mix4o445/antigravity-ascii-wallpapers` under the MIT License.
 - This repository adapts the runtime, `--dsw-*` theming, session reactivity, and Cordis plugin packaging for **DeepSeek Harness**.
 
