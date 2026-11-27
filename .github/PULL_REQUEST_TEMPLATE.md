@@ -1,9 +1,9 @@
-## Ringkasan Perubahan
-Jelaskan singkat perubahan di PR ini.
+## Summary
+Briefly describe the changes in this PR.
 
-## Issue Terkait
+## Related Issue
 Closes #
 
 ## Checklist
-- [ ] `npm test` lulus
-- [ ] Merge menggunakan **Squash and merge**
+- [ ] `npm test` passes
+- [ ] Merge using **Squash and merge**

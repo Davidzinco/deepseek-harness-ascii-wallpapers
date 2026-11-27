@@ -1,13 +1,13 @@
 ---
 name: Feature / Task
-about: Catat fitur atau task baru sebelum mulai coding
+about: Track a new feature or task before starting work
 labels: enhancement
 ---
 
-## Tujuan
-Jelaskan fitur atau task yang ingin dikerjakan.
+## Goal
+Describe the feature or task you want to implement.
 
 ## Checklist
-- [ ] Implementasi selesai
-- [ ] Unit test lulus (`npm test`)
-- [ ] PR dibuat dan dihubungkan ke issue ini
+- [ ] Implementation complete
+- [ ] Unit tests pass (`npm test`)
+- [ ] Pull Request created and linked to this issue
